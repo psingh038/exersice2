@@ -48,11 +48,13 @@
 	</div>
 	<script>
 	var taskInput = document.getElementById("taskInput");
+	var addButton=document.getElementsByTagName("button")[0];//first button
 	taskList = document.getElementById('taskList'),
 		addTaskErr = document.getElementById('addTaskError');
 	_localStorage = localStorage,
 		counter = 0;
 	var addTask = document.getElementsByTagName("button");
+
 	var incompleteTasksHolder = document.getElementById("incomplete-tasks");
 	var completedTasksHolder = document.getElementById("completed-tasks");
 	var createNewTaskElement = function(taskString, arr) {
@@ -77,30 +79,20 @@
 		return listItem;
 	};
 	var addTask = function() {
-		var listItemName = taskInput.value
-		listItem = createNewTaskElement(listItemName)
-		incompleteTasksHolder.appendChild(listItem)
-		bindTaskEvents(listItem, taskCompleted)
-			// taskInput.value = ""; 
-		if(taskInput.value === '') {
-			addTaskErr.style.display = '';
-		} else {
-			addTaskErr.style.display = 'none';
-			link.addEventListener('click', function(e) {
-				this.parentElement.remove();
-				//counter--;
-				e.preventDefault();
-			});
-			//counter++;
-			// Append li to ul
-			//taskList.appendChild(li);
-			//console.log(li);
+		console.log("Add Task...");
+    //Create a new list item with the text from the #new-task:
+    var listItem = createNewTaskElement(taskInput.value);
+		if (taskInput.value == ""){
+  document.getElementById("taskInput").innerHTML = "error";
+} else {
+  document.getElementById("taskInput").innerHTML = ""; 
+  incompleteTasksHolder.appendChild(listItem);
+  bindTaskEvents(listItem, taskCompleted);
+}
 			// Store task in Local Storage
-			//storeTaskInLocalStorage(taskInput.value);
-			// Clear The Input
-			//taskInput.value = '';
-		}
-	}
+			storeTaskInLocalStorage(taskInput.value);
+		};
+
 
 	function storeTaskInLocalStorage(value) {
 		_localStorage.setItem('taskInput', JSON.stringify(listItem));
@@ -136,14 +128,14 @@
 		bindTaskEvents(listItem, taskCompleted);
 	};
 	var bindTaskEvents = function(taskListItem, checkBoxEventHandler, cb) {
-		//var checkBox = taskListItem.querySelectorAll("input[type=checkbox]")[0];
-		// var editButton = taskListItem.querySelectorAll("button.edit")[0];
-		// var deleteButton = taskListItem.querySelectorAll("button.delete")[0];
+		var checkBox = taskListItem.querySelectorAll("input[type=checkbox]")[0];
+		var editButton = taskListItem.querySelectorAll("button.edit")[0];
+		var deleteButton = taskListItem.querySelectorAll("button.delete")[0];
 		editButton.onclick = editTask;
 		deleteButton.onclick = deleteTask;
 		checkBox.onchange = checkBoxEventHandler;
 	};
-	//addButton.addEventListener("click", addTask);
+	addButton.addEventListener("click", addTask);
 	for(var i = 0; i < incompleteTasksHolder.children.length; i++) {
 		bindTaskEvents(incompleteTasksHolder.children[i], taskCompleted);
 	}
